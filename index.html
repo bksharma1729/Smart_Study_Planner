@@ -1,11 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body{
+            background-color: rgb(56, 55, 55);
+        }
+        .navbar{
+           /* border: 2px solid red; */
+           background: black;
+           height: 70px;
+          
+
+        }
+         .navbar ul{
+            overflow: auto;
+            
+        }
+        .navbar li{
+            float: left;
+            list-style: none;
+            margin: 28px 40px;
+            font-size: 20px;
+        }
+       
+         .navbar ul a{
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar ul .logo{
+            margin: 50px 100px 0px 5px;
+            font-weight: 800;
+        }
+        .navbar ul .logo:hover{
+        color: brown;
+        background: skyblue;
+        border-radius: 20px;
+
+       }
+        .navbar ul .nav:hover{
+        color: rgb(18, 6, 234);
+        background: rgb(172, 250, 56);
+        border-radius: 20px;
+        
+       }
+       
+    </style>
 </head>
+
 <body>
-    <h1>Smart Study Planner</h1>
+    <header>
+        <nav class="navbar">
+
+            
+            <ul>
+                <li><a href="#" class="logo">Smart Study Planner</a></li>
+                <li><a href="#" class="nav">Dashboard</a></li>
+                <li><a href="#" class="nav">Subject Management</a></li>
+                <li><a href="#" class="nav">Shedule Planner</a></li>
+                <li><a href="#" class="nav">Task Manager</a></li>
+                <li><a href="#" class="nav">Progress Analytics</a></li>
+                <li><a href="#" class="nav">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
 </body>
+
 </html>
