@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Study Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-logo">📚</span>
+        <div>
+          <h1>Smart Study Planner</h1>
+          <p class="brand-subtitle">Plan · Focus · Achieve</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-link active" data-view="dashboard">Dashboard</button>
+        <button class="nav-link" data-view="subjects">Subjects</button>
+        <button class="nav-link" data-view="schedule">Schedule Planner</button>
+        <button class="nav-link" data-view="tasks">Task Manager</button>
+        <button class="nav-link" data-view="analytics">Progress Analytics</button>
+        <button class="nav-link" data-view="settings">Settings</button>
+      </nav>
+
+      <footer class="sidebar-footer">
+        <p id="todayDate"></p>
+      </footer>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h2 id="viewTitle">Dashboard</h2>
+        <div class="topbar-right">
+          <span id="clock"></span>
+          <button id="themeToggle" class="secondary-btn">Toggle Theme</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="view active">
+        <div class="grid grid-3">
+          <div class="card stat-card">
+            <h3>Total Subjects</h3>
+            <p class="stat-number" id="statSubjects">0</p>
+          </div>
+          <div class="card stat-card">
+            <h3>Pending Tasks</h3>
+            <p class="stat-number" id="statPendingTasks">0</p>
+          </div>
+          <div class="card stat-card">
+            <h3>Upcoming Deadlines (7 days)</h3>
+            <p class="stat-number" id="statUpcoming">0</p>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Today's Schedule</h3>
+            </div>
+            <ul id="todayScheduleList" class="list list-striped empty-state">
+              <li>No schedule set for today yet.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Upcoming Tasks</h3>
+            </div>
+            <ul id="upcomingTasksList" class="list list-striped empty-state">
+              <li>No upcoming tasks yet.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="subjects" class="view">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Add / Edit Subject</h3>
+            </div>
+            <form id="subjectForm" class="form">
+              <input type="hidden" id="subjectId" />
+              <div class="form-group">
+                <label for="subjectName">Subject Name</label>
+                <input type="text" id="subjectName" required placeholder="e.g., Mathematics" />
+              </div>
+              <div class="form-group">
+                <label for="subjectPriority">Priority</label>
+                <select id="subjectPriority" required>
+                  <option value="High">High</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="subjectHours">Target Study Hours / Week</label>
+                <input type="number" id="subjectHours" min="1" max="40" value="5" />
+              </div>
+              <div class="form-group">
+                <label for="subjectColor">Subject Color</label>
+                <input type="color" id="subjectColor" value="#4f46e5" />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Save Subject</button>
+                <button type="button" id="subjectFormReset" class="secondary-btn">Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Subjects</h3>
+            </div>
+            <ul id="subjectList" class="list list-striped empty-state">
+              <li>No subjects added yet.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule" class="view">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Add Schedule Slot</h3>
+            </div>
+            <form id="scheduleForm" class="form">
+              <input type="hidden" id="scheduleId" />
+              <div class="form-group">
+                <label for="scheduleSubject">Subject</label>
+                <select id="scheduleSubject" required></select>
+              </div>
+              <div class="form-group">
+                <label for="scheduleDay">Day of Week</label>
+                <select id="scheduleDay" required>
+                  <option value="0">Sunday</option>
+                  <option value="1">Monday</option>
+                  <option value="2">Tuesday</option>
+                  <option value="3">Wednesday</option>
+                  <option value="4">Thursday</option>
+                  <option value="5">Friday</option>
+                  <option value="6">Saturday</option>
+                </select>
+              </div>
+              <div class="form-group-inline">
+                <div class="form-group">
+                  <label for="scheduleStart">Start Time</label>
+                  <input type="time" id="scheduleStart" required />
+                </div>
+                <div class="form-group">
+                  <label for="scheduleEnd">End Time</label>
+                  <input type="time" id="scheduleEnd" required />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Save Slot</button>
+                <button type="button" id="scheduleFormReset" class="secondary-btn">Clear</button>
+              </div>
+              <p id="scheduleConflictMsg" class="hint hidden">⚠ Time conflict detected with another slot.</p>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Weekly Timetable</h3>
+            </div>
+            <div id="scheduleTableWrapper" class="schedule-table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleList">
+                  <tr class="empty-state-row">
+                    <td colspan="4">No schedule slots yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tasks" class="view">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Add Task</h3>
+            </div>
+            <form id="taskForm" class="form">
+              <input type="hidden" id="taskId" />
+              <div class="form-group">
+                <label for="taskTitle">Title</label>
+                <input type="text" id="taskTitle" required placeholder="e.g., Chemistry Chapter 3 notes" />
+              </div>
+              <div class="form-group">
+                <label for="taskSubject">Subject (Optional)</label>
+                <select id="taskSubject">
+                  <option value="">No specific subject</option>
+                </select>
+              </div>
+              <div class="form-group-inline">
+                <div class="form-group">
+                  <label for="taskType">Type</label>
+                  <select id="taskType">
+                    <option value="Assignment">Assignment</option>
+                    <option value="Exam">Exam</option>
+                    <option value="Revision">Revision</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="taskPriority">Priority</label>
+                  <select id="taskPriority">
+                    <option value="High">High</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="taskDueDate">Due Date</label>
+                <input type="date" id="taskDueDate" required />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Save Task</button>
+                <button type="button" id="taskFormReset" class="secondary-btn">Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>All Tasks</h3>
+            </div>
+            <ul id="taskList" class="list list-striped empty-state">
+              <li>No tasks added yet.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="analytics" class="view">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Task Completion</h3>
+            </div>
+            <div class="progress-wrapper">
+              <div class="progress-label">
+                <span>Completed</span>
+                <span id="taskCompletionPercent">0%</span>
+              </div>
+              <div class="progress-bar">
+                <div id="taskCompletionBar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+              <p class="hint" id="taskCompletionSummary">No tasks yet.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Subject Coverage</h3>
+            </div>
+            <div class="progress-wrapper">
+              <div class="progress-label">
+                <span>Subjects with Tasks</span>
+                <span id="subjectCoveragePercent">0%</span>
+              </div>
+              <div class="progress-bar">
+                <div id="subjectCoverageBar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+              <p class="hint" id="subjectCoverageSummary">Add subjects and tasks to see coverage.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Study Load Overview</h3>
+          </div>
+          <ul id="studyLoadList" class="list list-striped empty-state">
+            <li>Add subjects with weekly hours to see study load.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="settings" class="view">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3>Appearance</h3>
+            </div>
+            <div class="form">
+              <div class="form-group">
+                <label>Theme</label>
+                <p class="hint">Use the "Toggle Theme" button in the top-right to switch between light and dark mode. Your choice is saved.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Data Management</h3>
+            </div>
+            <div class="form">
+              <button id="exportDataBtn" class="secondary-btn full-width">Export Data (JSON)</button>
+              <button id="resetDataBtn" class="danger-btn full-width">Reset All Data</button>
+              <p class="hint">Export regularly to keep a backup of your planner data.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
